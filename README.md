@@ -1,2 +1,2 @@
 # makeRoll
-球体自由选择PYmaya插件
+MAYA 球体自由旋转PY插件
