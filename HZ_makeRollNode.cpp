@@ -1,17 +1,17 @@
 /*
 ------------------------------------
-ÈÕÆÚ£º2016 / 04 / 25
-×÷Õß£ººÆ×Ó
-ÓÊÏä£ºyinhao.ti@gmail.com
+æ—¥æœŸï¼š2016 / 04 / 25
+ä½œè€…ï¼šæµ©å­
+é‚®ç®±ï¼šyinhao.ti@gmail.com
 QQ : 97135036
 ------------------------------------
-ÇòÌå×ÔÓÉĞı×ª½Úµã
+çƒä½“è‡ªç”±æ—‹è½¬èŠ‚ç‚¹
 
-¹¹½¨µÄĞı×ª×ø±êÏµÎª YÖá(upVector ²ÎÊı£©
-ÇòÌåµÄÔË¶¯·½ÏòÎª   XÖá(move_vector)
-Ğı×ªÖáÎª          ZÖá(rotate_vector)
-Ò²¾ÍÊÇºÍÊÀ½ç×ø±êÒ»ÑùµÄĞÔÖÊµÄ×ø±ê
-ËùÒÔÈÆZÖáÏòĞı×ªÊ± ¸ù¾İ¾àÀë
+æ„å»ºçš„æ—‹è½¬åæ ‡ç³»ä¸º Yè½´(upVector å‚æ•°ï¼‰
+çƒä½“çš„è¿åŠ¨æ–¹å‘ä¸º   Xè½´(move_vector)
+æ—‹è½¬è½´ä¸º          Zè½´(rotate_vector)
+ä¹Ÿå°±æ˜¯å’Œä¸–ç•Œåæ ‡ä¸€æ ·çš„æ€§è´¨çš„åæ ‡
+æ‰€ä»¥ç»•Zè½´å‘æ—‹è½¬æ—¶ æ ¹æ®è·ç¦»
 */
 
 #include "HZ_makeRollNode.h"
@@ -63,7 +63,7 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 
 	if (plug == output_rotate || plug == output_rotateX || plug == output_rotateY || plug == output_rotateZ)
 	{   
-		// ÅĞ¶ÏĞè²»ĞèÒªÔËËãµÄÊı¾İ
+		// åˆ¤æ–­éœ€ä¸éœ€è¦è¿ç®—çš„æ•°æ®
 		double time_dou_data        = data.inputValue(input_time, &returnStatus).asTime().as(MTime::kSeconds);
 		double currentTime_dou_data = data.inputValue(input_currentTime, &returnStatus).asTime().as(MTime::kSeconds);
 		float  weight_flo_data      = data.inputValue(input_weight).asFloat();
@@ -71,7 +71,7 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 		{
 			return MS::kUnknownParameter;
 		}
-		// ³õÊ¼»¯Êı¾İ 
+		// åˆå§‹åŒ–æ•°æ® 
 		MFloatVector & currentPoition_flv_data = data.inputValue(input_position).asFloatVector();
 
 		MFloatVector & upVector_flv_data       = data.inputValue(input_upVector).asFloatVector();
@@ -84,12 +84,12 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 		MFloatVector & outputRotate_flv_data = outputRotate_hand.asFloatVector();
 		int rotateAxis = data.inputValue(rotate_axis).asShort();
 
-		//----------------------------¹¹½¨Ğı×ªĞı×ª¾ØÕó-----------------------------------
-		//  X Öá ÔË¶¯·½Ïò
+		//----------------------------æ„å»ºæ—‹è½¬æ—‹è½¬çŸ©é˜µ-----------------------------------
+		//  X è½´ è¿åŠ¨æ–¹å‘
 		MFloatVector X_axis_flv_data = currentPoition_flv_data - beforePosition_flv_data ;
 		X_axis_flv_data.normalize();
 		
-		// Y Öá ÏòÉÏÖáÏò
+		// Y è½´ å‘ä¸Šè½´å‘
 		MFloatVector  Y_axis_flv_data = upVector_flv_data - currentPoition_flv_data;
 		Y_axis_flv_data.normalize();
 		float temp = round(X_axis_flv_data * Y_axis_flv_data);
@@ -98,18 +98,18 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 			beforePosition_hand.setMFloatVector(currentPoition_flv_data);
 			return MS::kSuccess;
 		}
-		// Z Öá ×Ô¶¨ÒåµÄÇòÌåĞı×ªÖá
+		// Z è½´ è‡ªå®šä¹‰çš„çƒä½“æ—‹è½¬è½´
 		MFloatVector Z_axis_flv_data = X_axis_flv_data ^ Y_axis_flv_data;
 		Z_axis_flv_data.normalize();
 		
-		// Y Öá Í¨¹ı X ºÍ Z ²î³ËµÃµ½ĞÂµÄZÖá Ê¹µÃ X£¬Y£¬Z ÊÇ±ê×¼µÄÏà»¥´¹Ö±µÄ×ø±êÏµ¡£
+		// Y è½´ é€šè¿‡ X å’Œ Z å·®ä¹˜å¾—åˆ°æ–°çš„Zè½´ ä½¿å¾— Xï¼ŒYï¼ŒZ æ˜¯æ ‡å‡†çš„ç›¸äº’å‚ç›´çš„åæ ‡ç³»ã€‚
 		Y_axis_flv_data = Z_axis_flv_data ^ X_axis_flv_data;
 		Y_axis_flv_data.normalize();
 		
-		//°Ñ»ñµÃX,Y,ZÖáÆ´×°³ÉÒ»¸ö¾ØÕó
+		//æŠŠè·å¾—X,Y,Zè½´æ‹¼è£…æˆä¸€ä¸ªçŸ©é˜µ
 		MMatrix four_matrix;
-		// µ±Îª0Ê±£¬ÎªÈı¸öÖá¶¼Ğı×ª¡£
-		if (rotateAxis==0) // Èı¸öÖá¶¼Ğı×ª ¹¹½¨ÔÛµÄ¾ØÕó
+		// å½“ä¸º0æ—¶ï¼Œä¸ºä¸‰ä¸ªè½´éƒ½æ—‹è½¬ã€‚
+		if (rotateAxis==0) // ä¸‰ä¸ªè½´éƒ½æ—‹è½¬ æ„å»ºå’±çš„çŸ©é˜µ
 		{
 			
 			four_matrix[0][0] = X_axis_flv_data.x;
@@ -128,23 +128,23 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 		MMatrix four_matrix_inverse(four_matrix);
 		four_matrix_inverse = four_matrix_inverse.inverse();
 
-		//----------------------------¹¹½¨Ğı×ªĞı×ª¾ØÕó-----------------------------------
-		//ÇòÔË¶¯¾àÀë×ªÎª¶ÔÓ¦°ë¾¶Ô²×ªÁË¶àÉÙ½Ç¶È£¬×ªÎªÅ·À­½Ç£¨¾ÍÊÇZÖáĞı×ªµÄ¶ÈÊı£©ÔÙ×ª»¯ÎªÈÆZÖáĞı×ªµÄ¾ØÕó
+		//----------------------------æ„å»ºæ—‹è½¬æ—‹è½¬çŸ©é˜µ-----------------------------------
+		//çƒè¿åŠ¨è·ç¦»è½¬ä¸ºå¯¹åº”åŠå¾„åœ†è½¬äº†å¤šå°‘è§’åº¦ï¼Œè½¬ä¸ºæ¬§æ‹‰è§’ï¼ˆå°±æ˜¯Zè½´æ—‹è½¬çš„åº¦æ•°ï¼‰å†è½¬åŒ–ä¸ºç»•Zè½´æ—‹è½¬çš„çŸ©é˜µ
 		float moveDistance_flo_data = (currentPoition_flv_data - beforePosition_flv_data).length();
 		double roate_mangle = (-1.0*moveDistance_flo_data / radias_Flo_data)*weight_flo_data;
 		
-		// Î»ÒÆÇ°ÇòÌåµÄĞı×ª¾ØÕó
+		// ä½ç§»å‰çƒä½“çš„æ—‹è½¬çŸ©é˜µ
 		MEulerRotation  current_euleRoat(outputRotate_flv_data.x*(3.1415926 / 180.0),
 										outputRotate_flv_data.y*(3.1415926 / 180.0),
 										outputRotate_flv_data.z*(3.1415926 / 180.0), MEulerRotation::kXYZ);
 		MMatrix current_mmatrix = current_euleRoat.asMatrix();
 		MEulerRotation  after_euleRoat;
-		if (rotateAxis == !0)
+		if (rotateAxis !=0)
 		{
 			switch (rotateAxis)
 			{
 				case 1://X
-					if (round(X_axis_flv_data * _X_) == 1.0 || round(X_axis_flv_data * _X_) == -1.0)//Ö»ÓĞXÖáĞı×ªÊ± Î»ÒÆXÖá£¬Ó¦µ±²»Ğı×ª
+					if (round(X_axis_flv_data * _X_) == 1.0 || round(X_axis_flv_data * _X_) == -1.0)//åªæœ‰Xè½´æ—‹è½¬æ—¶ ä½ç§»Xè½´ï¼Œåº”å½“ä¸æ—‹è½¬
 					{
 						beforePosition_hand.setMFloatVector(currentPoition_flv_data);
 						return MS::kSuccess;
@@ -156,7 +156,7 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 					{ after_euleRoat.setValue(roate_mangle, 0.0, 0.0, MEulerRotation::kXYZ); }
 					break;
 				case 2://Y
-					if (round(X_axis_flv_data * _Y_) == 1.0 || round(X_axis_flv_data * _Y_) == -1.0)//Ö»ÓĞYÖáĞı×ªÊ± Î»ÒÆYÖá£¬Ó¦µ±²»Ğı×ª
+					if (round(X_axis_flv_data * _Y_) == 1.0 || round(X_axis_flv_data * _Y_) == -1.0)//åªæœ‰Yè½´æ—‹è½¬æ—¶ ä½ç§»Yè½´ï¼Œåº”å½“ä¸æ—‹è½¬
 					{
 						beforePosition_hand.setMFloatVector(currentPoition_flv_data);
 						return MS::kSuccess;
@@ -167,7 +167,7 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 					{ after_euleRoat.setValue(0.0, roate_mangle, 0.0, MEulerRotation::kXYZ); }
 					break;
 				case 3://Z
-					if (round(X_axis_flv_data * _Z_) == 1.0 || round(X_axis_flv_data * _Z_) == -1.0) //Ö»ÓĞZÖáĞı×ªÊ± Î»ÒÆZÖá£¬Ó¦µ±²»Ğı×ª
+					if (round(X_axis_flv_data * _Z_) == 1.0 || round(X_axis_flv_data * _Z_) == -1.0) //åªæœ‰Zè½´æ—‹è½¬æ—¶ ä½ç§»Zè½´ï¼Œåº”å½“ä¸æ—‹è½¬
 					{
 						beforePosition_hand.setMFloatVector(currentPoition_flv_data);
 						return MS::kSuccess;
@@ -183,35 +183,35 @@ MStatus HZ_makeRoll::compute(const MPlug& plug, MDataBlock& data)
 		{
 			after_euleRoat.setValue(0.0, 0.0, roate_mangle, MEulerRotation::kXYZ);
 		}
-		// Î»ÒÆºóµÄÅ·À­½Ç,×ªµ½¾ØÕó¡£
+		// ä½ç§»åçš„æ¬§æ‹‰è§’,è½¬åˆ°çŸ©é˜µã€‚
 		//MEulerRotation  after_euleRoat(0.0, 0.0, roate_mangle, MEulerRotation::kXYZ);
 		MMatrix after_mmatrix = after_euleRoat.asMatrix();
 		
 		//------------------------------------------------------------------------------
-		//ÇòÔË¶¯¾àÀë×ªÎª¶ÔÓ¦°ë¾¶Ô²×ªÁË¶àÉÙ½Ç¶È£¬×ªÎªÅ·À­½Ç£¨¾ÍÊÇZÖáĞı×ªµÄ¶ÈÊı£©
-		//ÔÙ×ª»¯ÎªÈÆZÖáĞı×ªµÄ¾ØÕó
+		//çƒè¿åŠ¨è·ç¦»è½¬ä¸ºå¯¹åº”åŠå¾„åœ†è½¬äº†å¤šå°‘è§’åº¦ï¼Œè½¬ä¸ºæ¬§æ‹‰è§’ï¼ˆå°±æ˜¯Zè½´æ—‹è½¬çš„åº¦æ•°ï¼‰
+		//å†è½¬åŒ–ä¸ºç»•Zè½´æ—‹è½¬çš„çŸ©é˜µ
 
-		//-----------------------ÇòÌåĞı×ªÖ®Ç°µÄ¾ØÕóÏà¶ÔÓÚ¹¹½¨¾ØÕó---------------------------
+		//-----------------------çƒä½“æ—‹è½¬ä¹‹å‰çš„çŸ©é˜µç›¸å¯¹äºæ„å»ºçŸ©é˜µ---------------------------
 		MMatrix qiu_with_four_matrix = current_mmatrix * four_matrix_inverse;
 		MMatrix qiu_with_four_matrix_inverse(qiu_with_four_matrix);
 		qiu_with_four_matrix_inverse = qiu_with_four_matrix_inverse.inverse();
-		//-----------------------ÇòÌåĞı×ªÖ®Ç°µÄ¾ØÕóÏà¶ÔÓÚ¹¹½¨¾ØÕó---------------------------
+		//-----------------------çƒä½“æ—‹è½¬ä¹‹å‰çš„çŸ©é˜µç›¸å¯¹äºæ„å»ºçŸ©é˜µ---------------------------
 
-		//-----------------------½«¸÷¸ö¾ØÕóÏà³Ë£¬»ñµÃ×îºóµÄÊä³ö¾ØÕó-------------------------
+		//-----------------------å°†å„ä¸ªçŸ©é˜µç›¸ä¹˜ï¼Œè·å¾—æœ€åçš„è¾“å‡ºçŸ©é˜µ-------------------------
 		MMatrix output_matrix ;
 		output_matrix = qiu_with_four_matrix * after_mmatrix * qiu_with_four_matrix_inverse *current_mmatrix;
 		MTransformationMatrix output_tranMatr(output_matrix);
 		MEulerRotation output_euleRota = output_tranMatr.eulerRotation();
-		//-----------------------½«¸÷¸ö¾ØÕóÏà³Ë£¬»ñµÃ×îºóµÄÊä³ö¾ØÕó-------------------------
+		//-----------------------å°†å„ä¸ªçŸ©é˜µç›¸ä¹˜ï¼Œè·å¾—æœ€åçš„è¾“å‡ºçŸ©é˜µ-------------------------
 
-		//----------------------------------ÉèÖÃÊıÖµ--------------------------------------
+		//----------------------------------è®¾ç½®æ•°å€¼--------------------------------------
 		//outputRotateX_hand.setDouble(output_euleRota.x*180.0 / 3.1415926);
 
-		MFloatVector out_flv((output_euleRota.x*180.0 / 3.1415926), (output_euleRota.y*180.0 / 3.1415926), (output_euleRota.z*180.0 / 3.1415926));
+		MFloatVector out_flv(float(output_euleRota.x*180.0 / 3.1415926), float(output_euleRota.y*180.0 / 3.1415926), float(output_euleRota.z*180.0 / 3.1415926));
 		outputRotate_hand.setMFloatVector(out_flv);
 
 		beforePosition_hand.setMFloatVector(currentPoition_flv_data);
-		//----------------------------------ÉèÖÃÊıÖµ--------------------------------------
+		//----------------------------------è®¾ç½®æ•°å€¼--------------------------------------
 		data.setClean(plug);
 	}
 	else {
@@ -236,7 +236,7 @@ MStatus HZ_makeRoll::initialize()
 	MFnUnitAttribute    unit_attr;
 	MFnEnumAttribute    enum_attr;
 	
-	//input Î»ÖÃ
+	//input ä½ç½®
 	input_positionX = numer_attr.create("positionX", "iX", MFnNumericData::kFloat, 0.0);
 	input_positionY = numer_attr.create("positionY", "iY", MFnNumericData::kFloat, 0.0);
 	input_positionZ = numer_attr.create("positionZ", "iZ", MFnNumericData::kFloat, 0.0);
@@ -245,7 +245,7 @@ MStatus HZ_makeRoll::initialize()
 	numer_attr.setStorable(true);
 	numer_attr.setChannelBox(true);
 
-	//input ÏòÉÏÏòÁ¿
+	//input å‘ä¸Šå‘é‡
 	input_upVectorX = numer_attr.create("upVetorX", "upX", MFnNumericData::kFloat, 0.0);
 	input_upVectorY = numer_attr.create("upVetorY", "upY", MFnNumericData::kFloat, 0.0);
 	input_upVectorZ = numer_attr.create("upVetorZ", "upZ", MFnNumericData::kFloat, 0.0);
@@ -254,21 +254,21 @@ MStatus HZ_makeRoll::initialize()
 	numer_attr.setStorable(true);
 	numer_attr.setChannelBox(true);
 	
-	//input °ë¾¶
+	//input åŠå¾„
 	input_radius = numer_attr.create("radius", "ra", MFnNumericData::kFloat, 0.0);
 	numer_attr.setWritable(true);
 	numer_attr.setStorable(true);
 	numer_attr.setChannelBox(true);
 	
-	//input ÏµÍ³Ö¡
+	//input ç³»ç»Ÿå¸§
 	input_time = unit_attr.create("inputTime", "it", MFnUnitAttribute::kTime, 1.0);
 	unit_attr.setChannelBox(true);
 	
-	//input ÔËËã¿ªÊ¼Ö¡
+	//input è¿ç®—å¼€å§‹å¸§
 	input_currentTime = unit_attr.create("currentTime", "ct", MFnUnitAttribute::kTime, 0.0);
 	unit_attr.setChannelBox(true);
 
-	//input È¨ÖØÖµ
+	//input æƒé‡å€¼
 	input_weight = numer_attr.create("weight", "we", MFnNumericData::kFloat, 1.0);
 	numer_attr.setWritable(true);
 	numer_attr.setStorable(true);
@@ -276,12 +276,12 @@ MStatus HZ_makeRoll::initialize()
 	numer_attr.setMin(0.0);
 	numer_attr.setMax(1.0);
 
-	//input ¾ØÕó
+	//input çŸ©é˜µ
 	input_matrix = matrix_attr.create("inputMatrix", "inm", MFnMatrixAttribute::kFloat);
 	matrix_attr.setWritable(true);
 	matrix_attr.setStorable(true);
 
-	//input ÖáÏò
+	//input è½´å‘
 	rotate_axis = enum_attr.create("rotateAxis", "rax", 0);
 	enum_attr.addField("All", 0);
 	enum_attr.addField("X", 1);
@@ -299,7 +299,7 @@ MStatus HZ_makeRoll::initialize()
 	numer_attr.setStorable(true);
 	*/
 
-	//input ÉÏÒ»ÕëÎ»ÖÃ ÄÚ²¿ÊôĞÔ
+	//input ä¸Šä¸€é’ˆä½ç½® å†…éƒ¨å±æ€§
 	__oldPositionX__ = numer_attr.create("oldPositionX", "olX", MFnNumericData::kFloat, 0.0);
 	__oldPositionY__ = numer_attr.create("oldPositionY", "olY", MFnNumericData::kFloat, 0.0);
 	__oldPositionZ__ = numer_attr.create("oldPositionZ", "olZ", MFnNumericData::kFloat, 0.0);
@@ -307,7 +307,7 @@ MStatus HZ_makeRoll::initialize()
 	numer_attr.setWritable(true);
 	numer_attr.setStorable(true);
 
-	//output Êä³öÅ·À­½Ç
+	//output è¾“å‡ºæ¬§æ‹‰è§’
 	output_rotateX = numer_attr.create("output_rotateX", "outX", MFnNumericData::kFloat, 0.0);
 	output_rotateY = numer_attr.create("output_rotateY", "outY", MFnNumericData::kFloat, 0.0);
 	output_rotateZ = numer_attr.create("output_rotateZ", "outZ", MFnNumericData::kFloat, 0.0);
